@@ -1,16 +1,11 @@
 package main
 
-import (
-	"fmt"
-	"os"
-)
-
-func main() {
+/* func main() {
 	s, _ := os.ReadFile("s.txt")
 	t, _ := os.ReadFile("t.txt")
 
 	fmt.Println(minWindow1(string(s), string(t)))
-}
+} */
 
 func minWindow1(s string, t string) string {
 	if len(s) == 0 || len(t) == 0 {
