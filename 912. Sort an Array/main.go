@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	ans := sortArray([]int{5, 2, 3, 1})
+	ans := sortArray([]int{2, 4, 3, 5, 1})
 	fmt.Println(ans)
 }
 
