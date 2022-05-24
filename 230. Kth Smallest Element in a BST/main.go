@@ -48,11 +48,11 @@ func traverse(root *TreeNode, k int) {
 		return
 	}
 
-	kthSmallest(root.Left, k)
+	traverse(root.Left, k)
 	rank++
 	if rank == k {
 		res = root.Val
 		return
 	}
-	kthSmallest(root.Right, k)
+	traverse(root.Right, k)
 }
