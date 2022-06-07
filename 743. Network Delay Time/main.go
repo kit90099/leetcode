@@ -2,8 +2,14 @@ package main
 
 import (
 	"container/heap"
+	"fmt"
 	"math"
 )
+
+func main() {
+	ans := networkDelayTime([][]int{{2, 1, 1}, {2, 3, 1}, {3, 4, 1}}, 4, 2)
+	fmt.Println(ans)
+}
 
 type State struct {
 	id                int
@@ -27,14 +33,14 @@ func (pq *PriorityQueue) Swap(a, b int) {
 	(*pq)[b].index = b
 }
 
-func (pq *PriorityQueue) Push(x any) {
+func (pq *PriorityQueue) Push(x interface{}) {
 	n := len(*pq)
 	s := x.(*State)
 	s.index = n
 	*pq = append(*pq, s)
 }
 
-func (pq *PriorityQueue) Pop() any {
+func (pq *PriorityQueue) Pop() interface{} {
 	old := *pq
 	n := len(old)
 	item := old[n-1]
@@ -65,7 +71,7 @@ func dijkstra(start int, graph [][][]int) []int {
 	})
 
 	for len(pq) != 0 {
-		curState := heap.Pop(&pq).(State)
+		curState := heap.Pop(&pq).(*State)
 		id := curState.id
 
 		if distanceTo[id] < curState.distanceFromStart {
@@ -85,4 +91,33 @@ func dijkstra(start int, graph [][][]int) []int {
 	}
 
 	return distanceTo
+}
+
+func networkDelayTime(times [][]int, n int, k int) int {
+	graph := buildGraph(n, times)
+
+	distanceTo := dijkstra(k, graph)
+	max := -1
+	for i := 1; i < len(distanceTo); i++ {
+		if distanceTo[i] == math.MaxInt {
+			return -1
+		}
+		if i != k && distanceTo[i] > max {
+			max = distanceTo[i]
+		}
+	}
+	return max
+}
+
+func buildGraph(n int, times [][]int) [][][]int {
+	graph := make([][][]int, n+1)
+	for i := 0; i < len(graph); i++ {
+		graph[i] = make([][]int, 0)
+	}
+
+	for _, t := range times {
+		graph[t[0]] = append(graph[t[0]], []int{t[1], t[2]})
+	}
+
+	return graph
 }
