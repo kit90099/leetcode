@@ -2,13 +2,19 @@ package main
 
 import (
 	"container/heap"
-	"fmt"
 	"math"
 )
 
 func main() {
-	ans := networkDelayTime([][]int{{2, 1, 1}, {2, 3, 1}, {3, 4, 1}}, 4, 2)
-	fmt.Println(ans)
+	var pq PriorityQueue = []*State{}
+	heap.Push(&pq, &State{
+		x:                 0,
+		y:                 0,
+		distanceFromStart: 0,
+	})
+
+	/* ans := minimumEffortPath([][]int{{1, 2, 1, 1, 1}, {1, 2, 1, 2, 1}, {1, 2, 1, 2, 1}, {1, 2, 1, 2, 1}, {1, 1, 1, 2, 1}})
+	fmt.Println(ans) */
 }
 
 type State struct {
@@ -81,6 +87,7 @@ func minimumEffortPath(heights [][]int) int {
 			distanceTo[i][j] = math.MaxInt
 		}
 	}
+	distanceTo[0][0] = 0
 
 	var pq PriorityQueue = []*State{}
 	heap.Push(&pq, &State{
@@ -90,7 +97,7 @@ func minimumEffortPath(heights [][]int) int {
 	})
 
 	for len(pq) != 0 {
-		s := heap.Pop(&pq).(State)
+		s := heap.Pop(&pq).(*State)
 		x, y, effort := s.x, s.y, s.distanceFromStart
 
 		if x == m-1 && y == n-1 {
@@ -104,12 +111,22 @@ func minimumEffortPath(heights [][]int) int {
 		adjNode := adj(heights, s.x, s.y)
 		for _, n := range adjNode {
 			effortToNext := max(
-				distanceTo[n[0]][n[1]],
+				distanceTo[x][y],
 				abs(heights[n[0]][n[1]]-heights[x][y]),
 			)
 
+			if distanceTo[n[0]][n[1]] > effortToNext {
+				distanceTo[n[0]][n[1]] = effortToNext
+				heap.Push(&pq, &State{
+					x:                 n[0],
+					y:                 n[1],
+					distanceFromStart: effortToNext,
+				})
+			}
 		}
 	}
+
+	return -1
 }
 
 func max(a int, b int) int {
