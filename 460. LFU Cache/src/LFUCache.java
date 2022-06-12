@@ -13,7 +13,8 @@ class LFUCache {
     }
     
     public int get(int key) {
-        if (!keyToVal.containsKey(key)) {
+
+        if (capacity == 0 || !keyToVal.containsKey(key)) {
             return -1;
         }
         
@@ -25,14 +26,19 @@ class LFUCache {
         if(keyToVal.containsKey(key)){
             keyToVal.put(key, value);
             increaseFreq(key);
+            return;
         }
         
-        if(capacity == keyToVal.size()){
+        if(capacity != 0 && capacity == keyToVal.size()){
             removeLeast();
         }
         
         keyToVal.put(key, value);
-        increaseFreq(key);
+        keyToFreq.put(key, 1);
+
+        freqToKey.putIfAbsent(1, new LinkedHashSet<>());
+        freqToKey.get(1).add(key);
+        minFreq = 1;
         
     }
     
