@@ -1,8 +1,8 @@
-package trieMap
+package triemap
 
 type TrieMap[E any] interface {
 	Put(key string, value E)
-	Get(key string) E
+	Get(key string) *E
 	Remove(key string)
 	ContainsKey(key string) bool
 	ShortestPrefixOf(query string) string

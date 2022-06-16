@@ -1,14 +1,24 @@
 package main
 
-import "fmt"
-
 /* import (
 	trieMap "com.grpk.utils/trie/triemap"
 ) */
 
 func main() {
-	//var m trieMap.TrieMap = trieMap.Default[int]()
-	m := make([]int, 256)
-	m['X'] = 2
-	fmt.Print("")
+	var p Person
+	p = &Member{}
+}
+
+type MemberBasicInfo struct {
+}
+
+type Member struct {
+}
+
+type Person interface {
+	BasicInfo() MemberBasicInfo
+}
+
+func (member *Member) BasicInfo() MemberBasicInfo {
+
 }
