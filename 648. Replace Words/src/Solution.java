@@ -13,7 +13,7 @@ class Solution {
     }
     
     public String replaceWords(List<String> dictionary, String sentence) {
-        TrieSet trieSet = new TrieSet();
+        TrieSet trieSet = new TrieSet(26, (c)->c.charValue()-'a', (i)->(char)(i.intValue()+'a'));
         for (String word : dictionary) {
             trieSet.add(word);
         }

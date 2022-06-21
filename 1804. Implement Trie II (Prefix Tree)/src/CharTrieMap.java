@@ -1,66 +1,21 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
-/**
- * Your Trie object will be instantiated and called as such:
- * Trie obj = new Trie();
- * obj.insert(word);
- * boolean param_2 = obj.search(word);
- * boolean param_3 = obj.startsWith(prefix);
- */
-
-class TrieSet {
-    private final TrieMap<Object> map = new TrieMap<>();
-    
-    public void add(String key) {
-        map.put(key, new Object());
-    }
-    
-    public void remove(String key) {
-        map.remove(key);
-    }
-    
-    public boolean contains(String key) {
-        return map.containsKey(key);
-    }
-    
-    public String shortestPrefixOf(String query) {
-        return map.shortestPrefixOf(query);
-    }
-    
-    public String longestPrefixOf(String query) {
-        return map.longestPrefixOf(query);
-    }
-    
-    public List<String> keysWithPrefix(String prefix) {
-        return map.keysWithPrefix(prefix);
-    }
-    
-    public boolean hasKeyWithPrefix(String prefix) {
-        return map.hasKeyWithPrefix(prefix);
-    }
-    
-    public List<String> keysWithPattern(String pattern) {
-        return map.keysWithPattern(pattern);
-    }
-    
-    public boolean hasKeyWithPattern(String pattern) {
-        return map.hasKeyWithPattern(pattern);
-    }
-    
-    public int size() {
-        return map.size();
-    }
-}
-
-class TrieMap<E> {
+public class CharTrieMap<E> implements TrieMap<E> {
     private int size = 0;
     private TrieNode<E> root = null;
     private int childrenSize = 256;
+    private Function<Character, Integer> charToIntConvertor = (c) -> (int) c.charValue();
+    private Function<Integer, Character> intToCharConvertor = (i) -> (char) i.intValue();
     
-    public TrieMap(){}
-    public TrieMap(int childrenSize) {
+    public CharTrieMap() {
+    }
+    
+    public CharTrieMap(int childrenSize, Function<Character, Integer> charToIntConvertor, Function<Integer, Character> intToCharConvertor) {
         this.childrenSize = childrenSize;
+        this.charToIntConvertor = charToIntConvertor;
+        this.intToCharConvertor = intToCharConvertor;
     }
     
     public void put(String key, E value) {
@@ -81,13 +36,17 @@ class TrieMap<E> {
             return node;
         }
         
-        char c = key.charAt(i);
+        int c = charToIntConvertor.apply(key.charAt(i));
         node.children[c] = put(node.children[c], key, value, i + 1);
         return node;
     }
     
     public void remove(String key) {
-    
+        if (!containsKey(key)) {
+            return;
+        }
+        root = remove(root, key, 0);
+        size--;
     }
     
     private TrieNode<E> remove(TrieNode<E> node, String key, int i) {
@@ -98,7 +57,7 @@ class TrieMap<E> {
         if (i == key.length()) {
             node.value = null;
         } else {
-            char c = key.charAt(i);
+            int c = charToIntConvertor.apply(key.charAt(i));
             node.children[c] = remove(node, key, i + 1);
         }
         
@@ -133,7 +92,7 @@ class TrieMap<E> {
                 return key.substring(0, i);
             }
             
-            char c = key.charAt(i);
+            int c = charToIntConvertor.apply(key.charAt(i));
             p = p.children[c];
         }
         
@@ -155,7 +114,7 @@ class TrieMap<E> {
                 length = i;
             }
             
-            char c = key.charAt(i);
+            int c = charToIntConvertor.apply(key.charAt(i));
             p = p.children[c];
         }
         
@@ -185,8 +144,8 @@ class TrieMap<E> {
             res.add(path);
         }
         
-        for (char c = 0; c < node.children.length; c++) {
-            traverse(node.children[c], res, path + c);
+        for (int c = 0; c < node.children.length; c++) {
+            traverse(node.children[c], res, path + intToCharConvertor.apply(c));
         }
     }
     
@@ -214,8 +173,8 @@ class TrieMap<E> {
         
         char c = path.charAt(i);
         if (c == '.') {
-            for (char j = 0; j < node.children.length; j++) {
-                traverse(node.children[j], res, pattern, path + j, i + 1);
+            for (int j = 0; j < node.children.length; j++) {
+                traverse(node.children[j], res, pattern, path + intToCharConvertor.apply(j), i + 1);
             }
         } else {
             traverse(node, res, pattern, path + c, i + 1);
@@ -237,9 +196,9 @@ class TrieMap<E> {
         
         char c = pattern.charAt(i);
         if (c != '.') {
-            return hasKeyWithPattern(node.children[c], pattern, i + 1);
+            return hasKeyWithPattern(node.children[charToIntConvertor.apply(c)], pattern, i + 1);
         }
-        for (char j = 0; j < node.children.length; j++) {
+        for (int j = 0; j < node.children.length; j++) {
             if (hasKeyWithPattern(node.children[j], pattern, i + 1)) {
                 return true;
             }
@@ -258,7 +217,7 @@ class TrieMap<E> {
                 return null;
             }
             
-            char c = key.charAt(i);
+            int c = charToIntConvertor.apply(key.charAt(i));
             p = p.children[c];
         }
         
@@ -269,8 +228,10 @@ class TrieMap<E> {
         E value;
         TrieNode<E>[] children;
         
-        public TrieNode(){}
-        public TrieNode(int size){
+        public TrieNode() {
+        }
+        
+        public TrieNode(int size) {
             this.children = new TrieNode[size];
         }
     }
