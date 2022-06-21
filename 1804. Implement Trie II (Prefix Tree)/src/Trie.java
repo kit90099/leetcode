@@ -39,8 +39,12 @@ class Trie {
     
     public void erase(String word) {
         Integer count = map.get(word);
+        if(count == null || count == 0){
+            return;
+        }
         if(count == 1){
             map.remove(word);
+            return;
         }
         map.put(word, count - 1);
     }

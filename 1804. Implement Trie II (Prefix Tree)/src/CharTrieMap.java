@@ -58,7 +58,7 @@ public class CharTrieMap<E> implements TrieMap<E> {
             node.value = null;
         } else {
             int c = charToIntConvertor.apply(key.charAt(i));
-            node.children[c] = remove(node, key, i + 1);
+            node.children[c] = remove(node.children[c], key, i + 1);
         }
         
         for (int j = 0; j < node.children.length; j++) {
