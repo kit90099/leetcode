@@ -1,24 +1,23 @@
 package main
 
-/* import (
-	trieMap "com.grpk.utils/trie/triemap"
-) */
+import (
+	"fmt"
+
+	"com.grpk.utils/queue"
+)
 
 func main() {
-	var p Person
-	p = &Member{}
+	var t queue.Queue[int] = queue.NewMonotonicQueue[int]()
+	t.Push(1)
+	t.Push(2)
+	t.Push(3)
+	t.Push(4)
+	print(*t.Pop())
+	print(*t.Pop())
+	print(*t.Pop())
+	print(*t.Pop())
 }
 
-type MemberBasicInfo struct {
-}
-
-type Member struct {
-}
-
-type Person interface {
-	BasicInfo() MemberBasicInfo
-}
-
-func (member *Member) BasicInfo() MemberBasicInfo {
-
+func print(i int) {
+	fmt.Println(i)
 }

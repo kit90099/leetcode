@@ -61,6 +61,10 @@ public class CharTrieMap<E> implements TrieMap<E> {
             node.children[c] = remove(node.children[c], key, i + 1);
         }
         
+        if(node.value != null){
+            return node;
+        }
+        
         for (int j = 0; j < node.children.length; j++) {
             if (node.children[j] != null) {
                 return node;

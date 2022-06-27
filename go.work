@@ -3,5 +3,4 @@ go 1.18
 use (
 	./gotest
 	./utils
-	./208-Implement-Trie-Prefix-Tree
 )
