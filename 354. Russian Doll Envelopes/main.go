@@ -31,7 +31,7 @@ func maxEnvelopes(envelopes [][]int) int {
 		left, right := 0, piles
 		for left < right {
 			mid := (left + right) / 2
-			if d[1] >= top[mid] {
+			if d[1] > top[mid] {
 				left = mid + 1
 			} else {
 				right = mid
