@@ -48,3 +48,8 @@ func max(a, b int) int {
 		return b
 	}
 }
+
+// ver 2
+/**
+	return true is ok
+**/
