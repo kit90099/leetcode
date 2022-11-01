@@ -1,16 +1,19 @@
 # Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
+from typing import Optional
+
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
 class Solution:
     def partition(self, head: Optional[ListNode], x: int) -> Optional[ListNode]:
         if not head:
             return None
-        dummy = ListNode(0)
+        large = ListNode(0)
         original = ListNode(0)
         oPtr = original
-        dPtr = dummy
+        dPtr = large
         curr = head
         last = None
         while curr:
@@ -25,5 +28,5 @@ class Solution:
                 oPtr = oPtr.next
                 oPtr.next = None
 
-        oPtr.next = dummy.next
+        oPtr.next = large.next
         return original.next
