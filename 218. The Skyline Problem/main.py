@@ -2,6 +2,12 @@ from heapq import heappush
 import heapq
 from typing import List
 
+class PqItem:
+    def __init__(self, r, h) -> None:
+        self.r = r
+        self.h = h
+    def __lt__(self , other):
+        return self.h > other.h
 
 class Solution:
     def getSkyline(self, buildings: List[List[int]]) -> List[List[int]]:
@@ -17,17 +23,15 @@ class Solution:
         idx = 0
         for b in boundries:
             while idx < n and buildings[idx][0] <= b:
-                heapq.heappush(pq, PQItem([buildings[idx][1],buildings[idx][2]]))
+                heapq.heappush(pq, PqItem(buildings[idx][1], buildings[idx][2]))
                 idx+=1
-            while len(pq) > 0 and heapq.nsmallest(1, pq)[0][0] <= b:
+            while len(pq) > 0 and pq[0].r <= b:
                 heapq.heappop(pq)
             max = 0
             if len(pq) != 0:
-                max = heapq.nsmallest(1, pq)[0][1]
-
-            if len(res) != 0 and res[-1][1] == max:
-                continue
-            res.append([b, max])
+                max = pq[0].h
+            if len(res) == 0 or res[-1][1] != max:
+                res.append([b, max])
         return res
             
 
