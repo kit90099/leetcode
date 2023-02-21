@@ -1,0 +1,21 @@
+from typing import List
+
+
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        lo, hi = 0, len(nums)-1
+        while lo < hi:
+            mid = lo + (hi - lo) // 2
+
+            if nums[mid] < nums[hi]:
+                # left
+                hi = mid
+            elif nums[mid] > nums[hi]:
+                lo = mid + 1
+            else:
+                hi -= - 1
+            
+        return nums[lo]
+    
+s = Solution()
+print(s.findMin([4,3,4]))
